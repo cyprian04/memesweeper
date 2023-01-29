@@ -22,7 +22,7 @@ public:
 		bool isRevealed() const;
 		void Flagged();
 		bool isFlagged() const;
-		void Draw(const Vei2& screenPos, Graphics& gfx );
+		void Draw(const Vei2& screenPos, bool GameOver, Graphics& gfx );
 		void SetNeighborsMemeCount(int nMemes);
 	private:
 		State state = State::Hidden;
@@ -41,6 +41,7 @@ private:
 	Vei2 ScreenToGrid(const Vei2& screenPos);
 	int CountNeighborsMeme(const Vei2 GridPos);
 private:
+	bool isGameOver = false;
 	static constexpr int width = 20;
 	static constexpr int height = 20;
 	Tile field[height * width];
