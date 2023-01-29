@@ -20,6 +20,8 @@ public:
 		bool HasMeme() const;
 		void Reveal();
 		bool isRevealed() const;
+		void Flagged();
+		bool isFlagged() const;
 		void Draw(const Vei2& screenPos, Graphics& gfx );
 	private:
 		State state = State::Hidden;
@@ -30,6 +32,7 @@ public:
 	void Draw(Graphics& gfx);
 	RectI GetRect() const;
 	void onRevealClick(const Vei2& screenPos);
+	void onFlagClick(const Vei2& screenPos);
 private:
 	Tile& TileAt(const Vei2 GridPos);
 	const Tile& TileAt(const Vei2& GridPos) const;

@@ -23,6 +23,24 @@ bool Memefield::Tile::isRevealed() const
 	return state == State::Revealed;
 }
 
+void Memefield::Tile::Flagged()
+{
+	assert(!isRevealed());
+	if (state == State::Hidden)
+	{
+		state = State::Flagged;
+	}
+	else
+	{
+		state = State::Hidden;
+	}
+}
+
+bool Memefield::Tile::isFlagged() const
+{
+	return state == State::Flagged;
+}
+
 void Memefield::Tile::Draw(const Vei2& screenPos, Graphics& gfx)
 {
 	switch (state)
@@ -91,9 +109,20 @@ void Memefield::onRevealClick(const Vei2& screenPos)
 	const Vei2 gridPos = ScreenToGrid(screenPos);
 	assert(gridPos.x >= 0 && gridPos.x < width && gridPos.y >= 0 && gridPos.y < height);
 	Tile& tile = TileAt(gridPos);
-	if (!tile.isRevealed())
+	if (!tile.isRevealed() && !tile.isFlagged())
 	{
 		tile.Reveal();
+	}
+}
+
+void Memefield::onFlagClick(const Vei2& screenPos)
+{
+	const Vei2 gridPos = ScreenToGrid(screenPos);
+	assert(gridPos.x >= 0 && gridPos.x < width&& gridPos.y >= 0 && gridPos.y < height);
+	Tile& tile = TileAt(gridPos);
+	if (!tile.isRevealed())
+	{
+		tile.Flagged();
 	}
 }
 
