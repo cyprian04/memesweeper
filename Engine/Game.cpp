@@ -50,7 +50,6 @@ void Game::UpdateModel()
 				field.onRevealClick(MousePos);
 			}
 		}
-
 		else if (e.GetType() == Mouse::Event::Type::RPress)
 		{
 			const Vei2 MousePos = e.GetPos();

@@ -55,16 +55,22 @@ void Memefield::Tile::Draw(const Vei2& screenPos, Graphics& gfx)
 	case State::Revealed:
 		if (!hasMeme)
 		{
-			SpriteCodex::DrawTile0(screenPos, gfx);
+			SpriteCodex::DrawTileNumber(screenPos, nNeighborsMemes, gfx);
 		}
 		else
 		{
-			SpriteCodex::DrawTile0(screenPos, gfx);
 			SpriteCodex::DrawTileBomb(screenPos, gfx);
 		}
 		break;
 	}
 }
+
+void Memefield::Tile::SetNeighborsMemeCount(int nMemes)
+{
+	assert(nNeighborsMemes == -1);
+	nNeighborsMemes = nMemes;
+}
+
 
 Memefield::Memefield(int nMemes)
 {
@@ -85,6 +91,14 @@ Memefield::Memefield(int nMemes)
 
 		TileAt(SpawnPos).SpawnMeme();
 	}
+
+	for (Vei2 GridPos = { 0,0 }; GridPos.y < height; GridPos.y++)
+	{
+		for (GridPos.x = 0; GridPos.x < width; GridPos.x++)
+		{
+			TileAt(GridPos).SetNeighborsMemeCount(CountNeighborsMeme(GridPos));
+		}
+	}
 }
 
 void Memefield::Draw(Graphics& gfx)
@@ -92,7 +106,7 @@ void Memefield::Draw(Graphics& gfx)
 	gfx.DrawRect(GetRect(), SpriteCodex::baseColor);
 	for (Vei2 GridPos = {0,0}; GridPos.y < height; GridPos.y ++)
 	{
-		for (GridPos.x = 0; GridPos.x < height; GridPos.x++)
+		for (GridPos.x = 0; GridPos.x < width; GridPos.x++)
 		{
 			TileAt(GridPos).Draw(GridPos * SpriteCodex::tileSize, gfx);
 		}
@@ -140,4 +154,25 @@ const Memefield::Tile& Memefield::TileAt(const Vei2& GridPos) const
 Vei2 Memefield::ScreenToGrid(const Vei2& screenPos)
 {
 	return screenPos / SpriteCodex::tileSize;
+}
+
+int Memefield::CountNeighborsMeme(const Vei2 GridPos)
+{
+	const int xStart = std::max(0, GridPos.x - 1);
+	const int yStart = std::max(0, GridPos.y - 1);
+	const int xEnd = std::min(width - 1, GridPos.x + 1);
+	const int yEnd = std::min(height - 1, GridPos.y + 1);
+
+	int count = 0;
+	for (Vei2 gridPos= {xStart, yStart}; gridPos.y <= yEnd; gridPos.y++)
+	{
+		for (gridPos.x = xStart; gridPos.x <= xEnd; gridPos.x++)
+		{
+			if (TileAt(gridPos).HasMeme())
+			{
+				count++;
+			}
+		}
+	}
+	return count;
 }
