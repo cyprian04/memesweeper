@@ -112,6 +112,10 @@ void Memefield::Tile::SetNeighborsMemeCount(int nMemes)
 
 
 Memefield::Memefield(int nMemes)
+	:
+	xV(240),
+	yV(140),
+	TopLeft(xV,yV)
 {
 	assert(nMemes > 0 && nMemes < width* height);
 	std::random_device rd;
@@ -143,18 +147,19 @@ Memefield::Memefield(int nMemes)
 void Memefield::Draw(Graphics& gfx)
 {
 	gfx.DrawRect(GetRect(), SpriteCodex::baseColor);
-	for (Vei2 GridPos = {0,0}; GridPos.y < height; GridPos.y ++)
+
+	for (Vei2 GridPos = { 0,0}; GridPos.y < height; GridPos.y++)
 	{
 		for (GridPos.x = 0; GridPos.x < width; GridPos.x++)
 		{
-			TileAt(GridPos).Draw(GridPos * SpriteCodex::tileSize, isGameOver, gfx);
+			TileAt(GridPos).Draw((TopLeft+ GridPos* SpriteCodex::tileSize), isGameOver, gfx);
 		}
 	}
 }
 
-RectI Memefield::GetRect() const
+RectI Memefield::GetRect() 
 {
-	return RectI(0,width * SpriteCodex::tileSize,0,height * SpriteCodex::tileSize);
+	return RectI::FromCenter(Vei2(400, 300), int(width * SpriteCodex::tileSize) / 2, int(height * SpriteCodex::tileSize) / 2);
 }
 
 void Memefield::onRevealClick(const Vei2& screenPos)
@@ -162,7 +167,7 @@ void Memefield::onRevealClick(const Vei2& screenPos)
 	if (!isGameOver)
 	{
 		const Vei2 gridPos = ScreenToGrid(screenPos);
-		assert(gridPos.x >= 0 && gridPos.x < width&& gridPos.y >= 0 && gridPos.y < height);
+		//assert(gridPos.x >= GetRect().left && gridPos.x < GetRect().right && gridPos.y >= GetRect().top && gridPos.y < GetRect().bottom);
 		Tile& tile = TileAt(gridPos);
 		if (!tile.isRevealed() && !tile.isFlagged())
 		{

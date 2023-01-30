@@ -32,7 +32,7 @@ public:
 public:
 	Memefield(int nMemes);
 	void Draw(Graphics& gfx);
-	RectI GetRect() const;
+	RectI GetRect() ;
 	void onRevealClick(const Vei2& screenPos);
 	void onFlagClick(const Vei2& screenPos);
 private:
@@ -45,4 +45,7 @@ private:
 	static constexpr int width = 20;
 	static constexpr int height = 20;
 	Tile field[height * width];
+	int xV;
+	int yV;
+	Vei2 TopLeft;
 };
