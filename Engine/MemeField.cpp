@@ -166,7 +166,7 @@ void Memefield::onRevealClick(const Vei2& screenPos)
 {
 	if (!isGameOver)
 	{
-		const Vei2 gridPos = ScreenToGrid(screenPos);
+		const Vei2 gridPos = ScreenToGrid(screenPos - TopLeft);
 		//assert(gridPos.x >= GetRect().left && gridPos.x < GetRect().right && gridPos.y >= GetRect().top && gridPos.y < GetRect().bottom);
 		Tile& tile = TileAt(gridPos);
 		if (!tile.isRevealed() && !tile.isFlagged())
@@ -184,7 +184,7 @@ void Memefield::onFlagClick(const Vei2& screenPos)
 {
 	if (!isGameOver)
 	{
-		const Vei2 gridPos = ScreenToGrid(screenPos);
+		const Vei2 gridPos = ScreenToGrid(screenPos - TopLeft);
 		assert(gridPos.x >= 0 && gridPos.x < width&& gridPos.y >= 0 && gridPos.y < height);
 		Tile& tile = TileAt(gridPos);
 		if (!tile.isRevealed())
