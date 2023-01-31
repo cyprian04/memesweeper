@@ -35,7 +35,7 @@ public:
 	RectI GetRect() const;
 	void onRevealClick(const Vei2& screenPos);
 	void onFlagClick(const Vei2& screenPos);
-	int GetDestroyedMemes() const;
+	int GetCounter() const;
 private:
 	Tile& TileAt(const Vei2 GridPos);
 	const Tile& TileAt(const Vei2& GridPos) const;
@@ -43,11 +43,12 @@ private:
 	int CountNeighborsMeme(const Vei2 GridPos);
 private:
 	bool isGameOver = false;
-	static constexpr int width = 20;
-	static constexpr int height = 20;
+	static constexpr int width = 5;
+	static constexpr int height = 5;
 	Tile field[height * width];
+	int counter = height * width;
 	int xV;
 	int yV;
 	Vei2 TopLeft;
-	int DestroyedMemes = 0;
+	int Memes = 0;
 };

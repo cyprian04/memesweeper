@@ -113,8 +113,8 @@ void Memefield::Tile::SetNeighborsMemeCount(int nMemes)
 
 Memefield::Memefield(int nMemes)
 	:
-	xV(240),
-	yV(140),
+	xV(360),
+	yV(260),
 	TopLeft(xV,yV)
 {
 	assert(nMemes > 0 && nMemes < width* height);
@@ -133,7 +133,9 @@ Memefield::Memefield(int nMemes)
 		} while (TileAt(SpawnPos).HasMeme());
 
 		TileAt(SpawnPos).SpawnMeme();
+		Memes++;
 	}
+	counter -= Memes;
 
 	for (Vei2 GridPos = { 0,0 }; GridPos.y < height; GridPos.y++)
 	{
@@ -176,6 +178,10 @@ void Memefield::onRevealClick(const Vei2& screenPos)
 			{
 				isGameOver = true;
 			}
+			else
+			{
+				counter--;
+			}
 		}
 	}
 }
@@ -190,17 +196,13 @@ void Memefield::onFlagClick(const Vei2& screenPos)
 		if (!tile.isRevealed())
 		{
 			tile.Flagged();
-			if (tile.HasMeme())
-			{
-				DestroyedMemes++;
-			}
 		}
 	}
 }
 
-int Memefield::GetDestroyedMemes() const
+int Memefield::GetCounter() const
 {
-	return DestroyedMemes;
+	return counter;
 }
 
 Memefield::Tile& Memefield::TileAt(const Vei2 GridPos)

@@ -64,7 +64,7 @@ void Game::UpdateModel()
 void Game::ComposeFrame()
 {
 	field.Draw(gfx);
-	if (field.GetDestroyedMemes() == nMemes)
+	if (field.GetCounter() == 0)
 	{
 		SpriteCodex::DrawWin(Vei2(400, 300), gfx);
 	}

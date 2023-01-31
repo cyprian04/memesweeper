@@ -44,6 +44,6 @@ private:
 	/********************************/
 	/*  User Variables              */
 	Memefield field;
-	static constexpr int nMemes = 20;
+	static constexpr int nMemes = 1;
 	/********************************/
 };
