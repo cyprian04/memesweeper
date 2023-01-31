@@ -32,9 +32,10 @@ public:
 public:
 	Memefield(int nMemes);
 	void Draw(Graphics& gfx);
-	RectI GetRect() ;
+	RectI GetRect() const;
 	void onRevealClick(const Vei2& screenPos);
 	void onFlagClick(const Vei2& screenPos);
+	int GetDestroyedMemes() const;
 private:
 	Tile& TileAt(const Vei2 GridPos);
 	const Tile& TileAt(const Vei2& GridPos) const;
@@ -48,4 +49,5 @@ private:
 	int xV;
 	int yV;
 	Vei2 TopLeft;
+	int DestroyedMemes = 0;
 };

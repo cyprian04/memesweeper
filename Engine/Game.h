@@ -24,7 +24,7 @@
 #include "Mouse.h"
 #include "Graphics.h"
 #include "MemeField.h"
-
+#include "SpriteCodex.h"
 class Game
 {
 public:
@@ -44,5 +44,6 @@ private:
 	/********************************/
 	/*  User Variables              */
 	Memefield field;
+	static constexpr int nMemes = 20;
 	/********************************/
 };

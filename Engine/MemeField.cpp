@@ -157,7 +157,7 @@ void Memefield::Draw(Graphics& gfx)
 	}
 }
 
-RectI Memefield::GetRect() 
+RectI Memefield::GetRect() const 
 {
 	return RectI::FromCenter(Vei2(400, 300), int(width * SpriteCodex::tileSize) / 2, int(height * SpriteCodex::tileSize) / 2);
 }
@@ -167,7 +167,7 @@ void Memefield::onRevealClick(const Vei2& screenPos)
 	if (!isGameOver)
 	{
 		const Vei2 gridPos = ScreenToGrid(screenPos - TopLeft);
-		//assert(gridPos.x >= GetRect().left && gridPos.x < GetRect().right && gridPos.y >= GetRect().top && gridPos.y < GetRect().bottom);
+		assert(gridPos.x >= 0 && gridPos.x < width&& gridPos.y >= 0 && gridPos.y < height);
 		Tile& tile = TileAt(gridPos);
 		if (!tile.isRevealed() && !tile.isFlagged())
 		{
@@ -190,8 +190,17 @@ void Memefield::onFlagClick(const Vei2& screenPos)
 		if (!tile.isRevealed())
 		{
 			tile.Flagged();
+			if (tile.HasMeme())
+			{
+				DestroyedMemes++;
+			}
 		}
 	}
+}
+
+int Memefield::GetDestroyedMemes() const
+{
+	return DestroyedMemes;
 }
 
 Memefield::Tile& Memefield::TileAt(const Vei2 GridPos)
