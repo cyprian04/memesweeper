@@ -2,10 +2,17 @@
 #include "Graphics.h"
 #include "RectI.h"
 #include "Vei2.h"
+#include "Sound.h"
 #include <random>
 class Memefield
 {
 public:
+	enum class GameState
+	{
+		Lost,
+		Win,
+		played
+	};
 	class Tile
 	{
 	public:
@@ -22,7 +29,7 @@ public:
 		bool isRevealed() const;
 		void Flagged();
 		bool isFlagged() const;
-		void Draw(const Vei2& screenPos, bool GameOver, Graphics& gfx );
+		void Draw(const Vei2& screenPos, GameState GameIs, Graphics& gfx ) const ;
 		void SetNeighborsMemeCount(int nMemes);
 	private:
 		State state = State::Hidden;
@@ -35,20 +42,18 @@ public:
 	RectI GetRect() const;
 	void onRevealClick(const Vei2& screenPos);
 	void onFlagClick(const Vei2& screenPos);
-	int GetCounter() const;
+	GameState GetGameIs() const;
 private:
 	Tile& TileAt(const Vei2 GridPos);
 	const Tile& TileAt(const Vei2& GridPos) const;
 	Vei2 ScreenToGrid(const Vei2& screenPos);
 	int CountNeighborsMeme(const Vei2 GridPos);
+	bool GameIsWon() const;
 private:
-	bool isGameOver = false;
-	static constexpr int width = 25;
-	static constexpr int height = 10;
+	GameState GameIs = GameState::played;
+	static constexpr int width = 5;
+	static constexpr int height = 5;
+	Sound snd = Sound(L"spayed.wav");
 	Tile field[height * width];
-	int counter = height * width;
-	int xV;
-	int yV;
 	Vei2 TopLeft;
-	int Memes = 0;
 };

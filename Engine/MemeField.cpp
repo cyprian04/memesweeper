@@ -41,9 +41,9 @@ bool Memefield::Tile::isFlagged() const
 	return state == State::Flagged;
 }
 
-void Memefield::Tile::Draw(const Vei2& screenPos, bool GameOver, Graphics& gfx)
+void Memefield::Tile::Draw(const Vei2& screenPos, GameState GameIs, Graphics& gfx) const
 {
-	if (!GameOver)
+	if (GameIs != GameState::Lost)
 	{
 		switch (state)
 		{
@@ -131,9 +131,7 @@ Memefield::Memefield(const Vei2 center, int nMemes)
 		} while (TileAt(SpawnPos).HasMeme());
 
 		TileAt(SpawnPos).SpawnMeme();
-		Memes++;
 	}
-	counter -= Memes;
 
 	for (Vei2 GridPos = { 0,0 }; GridPos.y < height; GridPos.y++)
 	{
@@ -152,7 +150,7 @@ void Memefield::Draw(Graphics& gfx)
 	{
 		for (GridPos.x = 0; GridPos.x < width; GridPos.x++)
 		{
-			TileAt(GridPos).Draw(TopLeft + GridPos* SpriteCodex::tileSize, isGameOver, gfx);
+			TileAt(GridPos).Draw(TopLeft + GridPos* SpriteCodex::tileSize, GameIs, gfx);
 		}
 	}
 }
@@ -164,7 +162,7 @@ RectI Memefield::GetRect() const
 
 void Memefield::onRevealClick(const Vei2& screenPos)
 {
-	if (!isGameOver)
+	if (GameIs == GameState::played)
 	{
 		const Vei2 gridPos = ScreenToGrid(screenPos);
 		assert(gridPos.x >= 0 && gridPos.x < width&& gridPos.y >= 0 && gridPos.y < height);
@@ -174,11 +172,12 @@ void Memefield::onRevealClick(const Vei2& screenPos)
 			tile.Reveal();
 			if (tile.HasMeme())
 			{
-				isGameOver = true;
+				GameIs = GameState::Lost;
+				snd.Play();
 			}
-			else
+			else if(GameIsWon())
 			{
-				counter--;
+				GameIs = GameState::Win;
 			}
 		}
 	}
@@ -186,7 +185,7 @@ void Memefield::onRevealClick(const Vei2& screenPos)
 
 void Memefield::onFlagClick(const Vei2& screenPos)
 {
-	if (!isGameOver)
+	if (GameIs == GameState::played)
 	{
 		const Vei2 gridPos = ScreenToGrid(screenPos);
 		assert(gridPos.x >= 0 && gridPos.x < width&& gridPos.y >= 0 && gridPos.y < height);
@@ -198,9 +197,9 @@ void Memefield::onFlagClick(const Vei2& screenPos)
 	}
 }
 
-int Memefield::GetCounter() const
+Memefield::GameState Memefield::GetGameIs() const
 {
-	return counter;
+	return GameIs;
 }
 
 Memefield::Tile& Memefield::TileAt(const Vei2 GridPos)
@@ -211,7 +210,6 @@ Memefield::Tile& Memefield::TileAt(const Vei2 GridPos)
 const Memefield::Tile& Memefield::TileAt(const Vei2& GridPos) const
 {
 	return field[GridPos.x + GridPos.y * width];
-
 }
 
 Vei2 Memefield::ScreenToGrid(const Vei2& screenPos)
@@ -238,4 +236,16 @@ int Memefield::CountNeighborsMeme(const Vei2 GridPos)
 		}
 	}
 	return count;
+}
+
+bool Memefield::GameIsWon() const
+{
+	for (const Tile& t: field)
+	{
+		if (!t.isRevealed() && !t.HasMeme())
+		{
+			return false;
+		}
+	}
+	return true;
 }
