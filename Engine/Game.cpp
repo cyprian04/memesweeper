@@ -25,7 +25,7 @@ Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd ),
-	field(nMemes)
+	field(gfx.GetRect().GetCenter(),nMemes)
 {
 }
 

@@ -30,7 +30,7 @@ public:
 		int nNeighborsMemes = -1;
 	};
 public:
-	Memefield(int nMemes);
+	Memefield(const Vei2 center, int nMemes);
 	void Draw(Graphics& gfx);
 	RectI GetRect() const;
 	void onRevealClick(const Vei2& screenPos);
@@ -43,8 +43,8 @@ private:
 	int CountNeighborsMeme(const Vei2 GridPos);
 private:
 	bool isGameOver = false;
-	static constexpr int width = 5;
-	static constexpr int height = 5;
+	static constexpr int width = 25;
+	static constexpr int height = 10;
 	Tile field[height * width];
 	int counter = height * width;
 	int xV;
